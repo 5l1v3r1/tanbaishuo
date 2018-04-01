@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>坦白说</title>
+<meta name="description" content="">
+<meta name="author" content="JackZ">
+</head>
+<body>
+<p>打开 https://ti.qq.com/cgi-node/honest-say/receive/mine 复制内容到文本框</p>
+<p>注：部分无法对应的数字会标注为*。</p>
+<textarea id="rawdata" style="width:100%;height:100px" placeholder="在此粘贴内容"></textarea>
+<table style="width:100%">
+<thead>
+    <tr><td>发送人</td>
+    <td>接收人</td>
+    <td>标签</td>
+</tr></thead>
+<tbody id="showcase">
+</tbody>
+</table>
+<script>
+    function decrypt(a){a=a.replace('*S1*','');var b=[{oe:'0',oK:'1',ow:'2',oi:'3','7e':'4','7K':'5','7w':'6','7i':'7',Ne:'8',NK:'9'},{4:'5',6:'1',n:'0','-':'2',o:'3',v:'4',C:'6',S:'7',c:'8',E:'9'},{5:'1',z:'0',A:'2',i:'3',P:'4',k:'5',s:'6',l:'7',F:'8',q:'9'}],c=[];return a.split('').forEach(function(e,f){if(1==f%4){var g=c.pop();c.push(g+e)}else c.push(e)}),c.map(function(e,f){return b[f%3][e]||'*'}).join('')}function parse(a){if('string'!=typeof a)return[];try{var c,b=JSON.parse(a);if(b instanceof Array)c=b;else{var e=b.data||b;c=e.confesses||e.list||[]}var f=[];return c.forEach(function(g){g.fromEncodeUin&&f.push({from:decrypt(g.fromEncodeUin||''),to:g.toNick||g.toUin+[],say:g.topicName})}),f}catch(g){return a.startsWith('*S1*')||a.startsWith('o')||a.startsWith('7')||a.startsWith('N')?[{from:decrypt(a),to:'',say:''}]:[]}}    
+</script>
+<script>
+    document.getElementById('rawdata').addEventListener('keyup',reload_table)
+document.getElementById('rawdata').addEventListener('change',reload_table)
+    function reload_table(){
+        var r = document.getElementById('rawdata').value
+        var s = document.getElementById('showcase')
+        var h = ''
+        parse(r).forEach(function(x){h+='<tr><td>'+x.from+'</td><td>'+x.to+'</td><td>'+x.say+'</td></tr>'})
+        s.innerHTML=h
+    }
+</script>
+</body></html>
